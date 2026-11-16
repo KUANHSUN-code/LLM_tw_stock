@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>像素台股知識庫 (LLM Wiki)</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+
+    body {
+        font-family: 'DotGothic16', sans-serif;
+        background-color: #e0f8d0; 
+        color: #000;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+
+    .container { max-width: 800px; margin: 0 auto; }
+
+    .pixel-box {
+        background: #fff;
+        border: 4px solid #000;
+        box-shadow: 6px 6px 0px #000;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .divider { border-top: 4px dashed #000; margin: 30px 0; }
+    
+    .folder-grid { display: flex; flex-wrap: wrap; gap: 20px; }
+
+    .folder {
+        background: #ffcc00; 
+        padding: 15px 30px;
+        cursor: pointer;
+        text-align: center;
+        transition: transform 0.1s;
+    }
+
+    .folder:hover {
+        background: #ffea00;
+        transform: translate(-2px, -2px);
+        box-shadow: 8px 8px 0px #000;
+    }
+
+    .folder h3 { margin: 0; font-size: 1.2rem; }
+    .folder p { margin: 5px 0 0 0; font-size: 1.1rem; font-weight: bold; }
+
+    .btn-back {
+        background: #ccc;
+        display: inline-block;
+        cursor: pointer;
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        padding: 10px 20px;
+    }
+    
+    .btn-back:hover { background: #ddd; }
+
+    .hidden { display: none !important; }
+    .text-red { color: #d32f2f; font-weight: bold; }
+    .text-green { color: #388e3c; font-weight: bold; }
+
+    .stock-detail h1 {
+        background: #000;
+        color: #fff;
+        padding: 10px;
+        margin-top: 0;
+    }
+</style>
+</head>
+<body>
+
+    <!-- ================= 主頁 (圖鑑清單) ================= -->
+    <div id="main-page" class="container">
+        <div class="pixel-box" style="background:#8b9bb4; color:white;">
+            <h1 style="margin:0; text-align:center;">📊 像素台股知識庫</h1>
+        </div>
+
+        <!-- ETF 分類 -->
+        <h2>📦 ETF 組合包 (Bundles)</h2>
+        <div class="folder-grid">
+            <div class="folder pixel-box" onclick="openStock('0050')">
+                <h3>[0050]</h3>
+                <p>元大台灣50</p>
+            </div>
+            <!-- AI 未來會把新的 ETF 塞在這裡 -->
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 科技股分類 (目前淨空，等待匯入) -->
+        <h2>⚙️ 科技股 (Tech)</h2>
+        <div class="folder-grid">
+            <!-- AI 未來會把新的科技股塞在這裡 -->
+        </div>
+        
+        <div class="divider"></div>
+
+        <!-- 傳產股分類 (目前淨空，等待匯入) -->
+        <h2>🏭 傳統產業 (Traditional)</h2>
+        <div class="folder-grid">
+            <div class="folder pixel-box" onclick="openStock('1519')">
+                <h3>[1519]</h3>
+                <p>華城</p>
+            </div>
+            <!-- AI 未來會把新的傳產股塞在這裡 -->
+        </div>
+    </div>
+
+
+    <!-- ================= 內頁 (股票詳細資料) ================= -->
+    <div id="detail-container" class="container hidden">
+        
+        <div class="btn-back pixel-box" onclick="goBack()">◄ 返回目錄</div>
+
+        <!-- 0050 的詳細資料 -->
+        <div id="stock-0050" class="stock-detail hidden pixel-box">
+            <h1>[0050] 元大台灣50</h1>
+            <p><strong>📝 簡介：</strong>台灣最具代表性的市值型 ETF。追蹤「臺灣50指數」，買進台灣股市市值前五十大的上市公司，實質走勢與台積電高度相關。</p>
+            <p><strong>💰 屬性：</strong> 長期跟隨大盤成長 ➡️ 適合退休試算 (<span class="text-red">穩健/積極型配置</span>)</p>
+            <p><strong>🔍 分析：</strong>投資 0050 等同於直接參與台灣龍頭企業的整體成長，但需注意單一成分股（台積電）權重過度集中的風險。每年配息兩次。</p>
+        </div>
+
+        <!-- 1519 的詳細資料 -->
+        <div id="stock-1519" class="stock-detail hidden pixel-box">
+            <h1>[1519] 華城</h1>
+            <p><strong>📝 簡介：</strong>台灣重電設備領導大廠，國內唯一具備 500kV 超高壓變壓器生產能力，受惠於台電強韌電網與外銷美國基建政策。</p>
+            <p><strong>💰 股價：</strong> 過去 雙位數 ➡️ 現在 千元級別 (<span class="text-red">強勢飆漲</span>)</p>
+            <p><strong>🔍 分析：</strong>擁有極高的技術護城河與高毛利外銷訂單，但需留意原物料波動與高基期後的估值修正風險。</p>
+        </div>
+
+    </div>
+
+    <!-- ================= 頁面切換邏輯 (JavaScript) ================= -->
+    <script>
+        function openStock(stockId) {
+            document.getElementById('main-page').classList.add('hidden');
+            document.getElementById('detail-container').classList.remove('hidden');
+            const allDetails = document.querySelectorAll('.stock-detail');
+            allDetails.forEach(detail => detail.classList.add('hidden'));
+            document.getElementById('stock-' + stockId).classList.remove('hidden');
+        }
+
+        function goBack() {
+            document.getElementById('detail-container').classList.add('hidden');
+            document.getElementById('main-page').classList.remove('hidden');
+        }
+    </script>
+
+</body>
+</html>
